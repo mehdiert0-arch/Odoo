@@ -5,6 +5,8 @@ import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import Clients from "../pages/Clients";
 import ClientDetails from "../pages/ClientDetails";
+import Products from "../pages/Products";
+import ProductDetails from "../pages/ProductDetails";
 
 const router = createBrowserRouter([
     {
@@ -26,6 +28,14 @@ const router = createBrowserRouter([
             {
                 path: '/clients/:id',
                 element: <ClientDetails />
+            },
+            {
+                path: '/products',
+                element: <Products />
+            },
+            {
+                path: '/products/:id',
+                element: <ProductDetails />
             }
         ]
     },
