@@ -3,6 +3,8 @@ import AuthLayout from "../layouts/AuthLayout";
 import DefaultLayout from "../layouts/DefaultLayout";
 import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
+import Clients from "../pages/Clients";
+import ClientDetails from "../pages/ClientDetails";
 
 const router = createBrowserRouter([
     {
@@ -16,6 +18,14 @@ const router = createBrowserRouter([
             {
                 path: '/dashboard',
                 element: <Dashboard />
+            },
+            {
+                path: '/clients',
+                element: <Clients />
+            },
+            {
+                path: '/clients/:id',
+                element: <ClientDetails />
             }
         ]
     },

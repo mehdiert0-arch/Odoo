@@ -21,6 +21,7 @@ export default function DefaultLayout() {
             <aside className="sidebar">
                 <nav>
                     <Link to="/dashboard">Dashboard</Link>
+                    <Link to="/clients">Clients (Odoo)</Link>
                 </nav>
             </aside>
             <div className="main-content">
