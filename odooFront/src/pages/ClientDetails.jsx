@@ -48,17 +48,8 @@ export default function ClientDetails() {
                 setClient(data.client || {});
             })
             .catch(err => {
-                console.warn(err);
-                // Fallback to mock data to see UI without Odoo
-                setClient({ 
-                    id: id, 
-                    name: "Mock Client " + id, 
-                    email: "mock@example.com", 
-                    phone: "+123456789", 
-                    city: "New York", 
-                    street: "5th Ave" 
-                });
-                setError("Odoo is not available. Showing mock data for demonstration.");
+                console.error(err);
+                setError(err.response?.data?.message || 'Failed to fetch client details');
             })
             .finally(() => {
                 setLoading(false);

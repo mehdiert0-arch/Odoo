@@ -65,24 +65,6 @@ export default function Login() {
             <button className="btn-primary" disabled={loading} type="submit">
                 {loading ? 'Signing in...' : 'Sign in'}
             </button>
-            
-            <button 
-                className="btn-primary" 
-                type="button"
-                onClick={() => {
-                    // Mock login to test UI without Odoo
-                    setUser({ name: "Dev User", uid: 999 });
-                    setToken(btoa('admin@test.com:password123')); // base64 encode mock credentials
-                }}
-                style={{ 
-                    marginTop: '1rem', 
-                    background: 'rgba(255,255,255,0.05)', 
-                    border: '1px solid rgba(255,255,255,0.1)' 
-                }}
-            >
-                Bypass Login (Dev Mode)
-            </button>
-
             <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.875rem', color: '#94a3b8' }}>
                 Don't have an account? <Link to="/signup" style={{ color: '#818cf8', textDecoration: 'none', fontWeight: '500' }}>Create account</Link>
             </div>

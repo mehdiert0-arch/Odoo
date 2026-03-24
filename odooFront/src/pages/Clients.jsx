@@ -40,15 +40,8 @@ export default function Clients() {
                 setClients(data.clients || []);
             })
             .catch(err => {
-                console.warn(err);
-                // Fallback to mock data to see UI without Odoo
-                setClients([
-                    { id: 1, name: "Alice Smith", email: "alice@example.com", phone: "+123456789", city: "New York", street: "5th Ave" },
-                    { id: 2, name: "Bob Johnson", email: "bob@example.com", phone: "+987654321", city: "London", street: "Baker St" },
-                    { id: 3, name: "Creative Studios Ltd", email: "contact@creativestudios.com", phone: "+1122334455", city: "Paris", street: "Rue de Rivoli" },
-                    { id: 4, name: "David Wilson", email: "david.w@example.com", phone: "+5566778899", city: "Sydney", street: "George St" },
-                ]);
-                setError("Odoo is not available. Showing mock data for demonstration.");
+                console.error(err);
+                setError(err.response?.data?.message || 'Failed to fetch clients from Odoo');
             })
             .finally(() => {
                 setLoading(false);
