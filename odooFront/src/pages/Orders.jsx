@@ -31,7 +31,7 @@ export default function Orders() {
         setLoading(true);
         const creds = getCredentials();
         if (!creds) {
-            setError("Credentials not found. Please login again.");
+            setError("Identifiants introuvables. Veuillez vous reconnecter.");
             setLoading(false);
             return;
         }
@@ -42,14 +42,13 @@ export default function Orders() {
             })
             .catch(err => {
                 console.error(err);
-                setError(err.response?.data?.message || 'Failed to fetch orders from Odoo');
+                setError(err.response?.data?.message || 'Échec du chargement des commandes depuis Odoo');
             })
             .finally(() => {
                 setLoading(false);
             });
     }
 
-    // Odoo Many2one fields often come as an array [id, "Name"]. We format them here.
     const formatName = (field) => {
         if (!field) return '-';
         if (Array.isArray(field) && field.length > 1) {
@@ -60,21 +59,21 @@ export default function Orders() {
 
     const formatState = (state) => {
         const stateMap = {
-            'draft': 'Quotation',
-            'sent': 'Quotation Sent',
-            'sale': 'Sales Order',
-            'done': 'Locked',
-            'cancel': 'Cancelled'
+            'draft': 'Devis',
+            'sent': 'Devis envoyé',
+            'sale': 'Bon de commande',
+            'done': 'Terminé',
+            'cancel': 'Annulé'
         };
         const label = stateMap[state] || state;
         
         let bgColor = 'rgba(255,255,255,0.1)';
         let color = '#fff';
         if (state === 'sale' || state === 'done') {
-            bgColor = 'rgba(16, 185, 129, 0.2)'; // Green
+            bgColor = 'rgba(16, 185, 129, 0.2)';
             color = '#34d399';
         } else if (state === 'cancel') {
-            bgColor = 'rgba(239, 68, 68, 0.2)'; // Red
+            bgColor = 'rgba(239, 68, 68, 0.2)';
             color = '#f87171';
         }
 
@@ -96,8 +95,8 @@ export default function Orders() {
     return (
         <div>
             <div className="page-header">
-                <h1 className="page-title">Sales Orders</h1>
-                <Link to="/orders/new" className="btn-primary" style={{ width: 'auto', margin: 0 }}>Create Order</Link>
+                <h1 className="page-title">Devis & Commandes</h1>
+                <Link to="/orders/new" className="btn-primary" style={{ width: 'auto', margin: 0 }}>Créer un devis</Link>
             </div>
 
             {error && (
@@ -112,16 +111,16 @@ export default function Orders() {
                         <div className="loader"></div>
                     </div>
                 ) : orders.length === 0 ? (
-                    <div className="empty-state">No orders found.</div>
+                    <div className="empty-state">Aucune commande trouvée.</div>
                 ) : (
                     <table className="data-table">
                         <thead>
                             <tr>
-                                <th>Order Ref</th>
-                                <th>Customer</th>
+                                <th>Référence</th>
+                                <th>Client</th>
                                 <th>Date</th>
                                 <th>Total</th>
-                                <th>Status</th>
+                                <th>Statut</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -130,11 +129,11 @@ export default function Orders() {
                                 <tr key={o.id} onClick={() => navigate(`/orders/${o.id}`)}>
                                     <td style={{ fontWeight: '500' }}>{o.name}</td>
                                     <td>{formatName(o.partner_id)}</td>
-                                    <td>{o.date_order ? new Date(o.date_order).toLocaleString() : '-'}</td>
-                                    <td style={{ fontWeight: '600' }}>{o.amount_total ? `$${parseFloat(o.amount_total).toFixed(2)}` : '-'}</td>
+                                    <td>{o.date_order ? new Date(o.date_order).toLocaleDateString() : '-'}</td>
+                                    <td style={{ fontWeight: '600' }}>{o.amount_total ? `${parseFloat(o.amount_total).toFixed(2)} €` : '-'}</td>
                                     <td>{formatState(o.state)}</td>
                                     <td>
-                                        <div style={{ color: '#c084fc', fontSize: '0.85rem', fontWeight: 'bold' }}>VIEW</div>
+                                        <div style={{ color: '#c084fc', fontSize: '0.85rem', fontWeight: 'bold' }}>VOIR</div>
                                     </td>
                                 </tr>
                             ))}

@@ -31,7 +31,7 @@ export default function Products() {
         setLoading(true);
         const creds = getCredentials();
         if (!creds) {
-            setError("Credentials not found. Please login again.");
+            setError("Identifiants introuvables. Veuillez vous reconnecter.");
             setLoading(false);
             return;
         }
@@ -42,14 +42,13 @@ export default function Products() {
             })
             .catch(err => {
                 console.error(err);
-                setError(err.response?.data?.message || 'Failed to fetch products from Odoo');
+                setError(err.response?.data?.message || 'Échec du chargement des produits depuis Odoo');
             })
             .finally(() => {
                 setLoading(false);
             });
     }
 
-    // Odoo Many2one fields often come as an array [id, "Name"]. We format them here.
     const formatCategory = (categ) => {
         if (!categ) return '-';
         if (Array.isArray(categ) && categ.length > 1) {
@@ -61,8 +60,8 @@ export default function Products() {
     return (
         <div>
             <div className="page-header">
-                <h1 className="page-title">Products (Odoo)</h1>
-                <Link to="/products/new" className="btn-primary" style={{ width: 'auto', margin: 0 }}>Add new</Link>
+                <h1 className="page-title">Produits (Odoo)</h1>
+                <Link to="/products/new" className="btn-primary" style={{ width: 'auto', margin: 0 }}>Ajouter un produit</Link>
             </div>
 
             {error && (
@@ -77,15 +76,15 @@ export default function Products() {
                         <div className="loader"></div>
                     </div>
                 ) : products.length === 0 ? (
-                    <div className="empty-state">No products found.</div>
+                    <div className="empty-state">Aucun produit trouvé.</div>
                 ) : (
                     <table className="data-table">
                         <thead>
                             <tr>
-                                <th>Name</th>
+                                <th>Nom</th>
                                 <th>Type</th>
-                                <th>Category</th>
-                                <th>List Price</th>
+                                <th>Catégorie</th>
+                                <th>Prix de vente</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -101,13 +100,13 @@ export default function Products() {
                                             fontSize: '0.8rem',
                                             textTransform: 'capitalize'
                                         }}>
-                                            {p.type || '-'}
+                                            {p.type === 'consu' ? 'Consommable' : p.type === 'service' ? 'Service' : 'Stockable'}
                                         </span>
                                     </td>
                                     <td>{formatCategory(p.categ_id)}</td>
-                                    <td>{p.list_price ? `$${parseFloat(p.list_price).toFixed(2)}` : '-'}</td>
+                                    <td>{p.list_price ? `${parseFloat(p.list_price).toFixed(2)} €` : '-'}</td>
                                     <td>
-                                        <div style={{ color: '#c084fc', fontSize: '0.85rem', fontWeight: 'bold' }}>EDIT</div>
+                                        <div style={{ color: '#c084fc', fontSize: '0.85rem', fontWeight: 'bold' }}>MODIFIER</div>
                                     </td>
                                 </tr>
                             ))}

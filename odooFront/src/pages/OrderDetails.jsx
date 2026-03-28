@@ -22,10 +22,7 @@ export default function OrderDetails() {
         if (!isNew) {
             getOrder();
         } else {
-            // Load clients and products for dropdowns when creating an order
             loadDependencies();
-            
-            // Add initial empty line
             setOrder(prev => ({
                 ...prev,
                 order_lines: [{ product_id: '', quantity: 1, price_unit: 0 }]
@@ -59,7 +56,7 @@ export default function OrderDetails() {
             setClients(clientsRes.data.clients || []);
             setProducts(productsRes.data.products || []);
         } catch (err) {
-            setError('Failed to load customers or products.');
+            setError('Échec du chargement des clients ou produits.');
         } finally {
             setLoading(false);
         }
@@ -75,7 +72,7 @@ export default function OrderDetails() {
             })
             .catch(err => {
                 console.error(err);
-                setError(err.response?.data?.message || 'Failed to fetch order details');
+                setError(err.response?.data?.message || 'Échec du chargement des détails de la commande');
             })
             .finally(() => {
                 setLoading(false);
@@ -90,29 +87,27 @@ export default function OrderDetails() {
         if (!isNew) {
             setTimeout(() => {
                 setSaving(false);
-                setError("Update method is not defined in OrderController yet.");
+                setError("La méthode de mise à jour n'est pas encore définie dans le backend.");
             }, 800);
             return;
         }
 
         const creds = getCredentials();
         if (!creds) {
-            setError("Credentials missing.");
+            setError("Identifiants manquants.");
             setSaving(false);
             return;
         }
 
-        // Validate partner
         if (!order.partner_id) {
-            setError("Please select a customer.");
+            setError("Veuillez sélectionner un client.");
             setSaving(false);
             return;
         }
 
-        // Validate lines
         const validLines = order.order_lines.filter(l => l.product_id && l.quantity > 0);
         if (validLines.length === 0) {
-            setError("Please add at least one valid product line.");
+            setError("Veuillez ajouter au moins une ligne d'article valide.");
             setSaving(false);
             return;
         }
@@ -134,7 +129,7 @@ export default function OrderDetails() {
             })
             .catch(err => {
                 console.error(err);
-                setError(err.response?.data?.message || 'Failed to create order');
+                setError(err.response?.data?.message || 'Échec de la création du devis');
                 setSaving(false);
             });
     }
@@ -159,7 +154,6 @@ export default function OrderDetails() {
             const newLines = [...prev.order_lines];
             newLines[index] = { ...newLines[index], [field]: value };
             
-            // Auto-fill price if product is selected
             if (field === 'product_id' && value) {
                 const selectedProd = products.find(p => p.id === parseInt(value));
                 if (selectedProd && selectedProd.list_price) {
@@ -178,10 +172,21 @@ export default function OrderDetails() {
         return field || '-';
     }
 
+    const getStatusLabel = (state) => {
+        const stateMap = {
+            'draft': 'Devis',
+            'sent': 'Devis envoyé',
+            'sale': 'Bon de commande',
+            'done': 'Terminé',
+            'cancel': 'Annulé'
+        };
+        return stateMap[state] || state;
+    }
+
     return (
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
             <div className="page-header" style={{ marginBottom: '1.5rem' }}>
-                <h1 className="page-title">{isNew ? 'Create New Order' : `Order Details: ${order.name || ''}`}</h1>
+                <h1 className="page-title">{isNew ? 'Nouveau Devis' : `Détails : ${order.name || ''}`}</h1>
             </div>
 
             {error && (
@@ -200,7 +205,7 @@ export default function OrderDetails() {
                         
                         {isNew ? (
                             <div className="form-group">
-                                <label>Customer</label>
+                                <label>Client</label>
                                 <select 
                                     value={order.partner_id || ''} 
                                     onChange={ev => setOrder({...order, partner_id: ev.target.value})} 
@@ -211,7 +216,7 @@ export default function OrderDetails() {
                                         color: 'white', fontSize: '1rem', boxSizing: 'border-box'
                                     }}
                                 >
-                                    <option value="">-- Select Customer --</option>
+                                    <option value="">-- Sélectionner un client --</option>
                                     {clients.map(c => (
                                         <option key={c.id} value={c.id}>{c.name}</option>
                                     ))}
@@ -220,19 +225,19 @@ export default function OrderDetails() {
                         ) : (
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
                                 <div style={{ flex: 1, padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                                    <h4 style={{ margin: '0 0 0.5rem 0', color: '#94a3b8', fontSize: '0.8rem', textTransform: 'uppercase' }}>Customer</h4>
+                                    <h4 style={{ margin: '0 0 0.5rem 0', color: '#94a3b8', fontSize: '0.8rem', textTransform: 'uppercase' }}>Client</h4>
                                     <div style={{ color: '#fff', fontSize: '0.95rem', fontWeight: '500' }}>{formatName(order.partner_id)}</div>
                                 </div>
                                 <div style={{ flex: 1, padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                                    <h4 style={{ margin: '0 0 0.5rem 0', color: '#94a3b8', fontSize: '0.8rem', textTransform: 'uppercase' }}>Status / Order Date</h4>
-                                    <div style={{ color: '#fff', fontSize: '0.95rem', textTransform: 'capitalize' }}>
-                                        {order.state || '-'} {order.date_order ? `(${new Date(order.date_order).toLocaleDateString()})` : ''}
+                                    <h4 style={{ margin: '0 0 0.5rem 0', color: '#94a3b8', fontSize: '0.8rem', textTransform: 'uppercase' }}>Statut / Date</h4>
+                                    <div style={{ color: '#fff', fontSize: '0.95rem' }}>
+                                        {getStatusLabel(order.state)} {order.date_order ? `(${new Date(order.date_order).toLocaleDateString()})` : ''}
                                     </div>
                                 </div>
                                 <div style={{ flex: 1, padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                                    <h4 style={{ margin: '0 0 0.5rem 0', color: '#94a3b8', fontSize: '0.8rem', textTransform: 'uppercase' }}>Total Amount</h4>
+                                    <h4 style={{ margin: '0 0 0.5rem 0', color: '#94a3b8', fontSize: '0.8rem', textTransform: 'uppercase' }}>Montant Total</h4>
                                     <div style={{ color: '#34d399', fontSize: '1.2rem', fontWeight: '600' }}>
-                                        {order.amount_total ? `$${parseFloat(order.amount_total).toFixed(2)}` : '$0.00'}
+                                        {order.amount_total ? `${parseFloat(order.amount_total).toFixed(2)} €` : '0.00 €'}
                                     </div>
                                 </div>
                                 {order.note && (
@@ -246,7 +251,7 @@ export default function OrderDetails() {
 
                         {isNew && (
                             <div style={{ marginTop: '2rem' }}>
-                                <h3 style={{ borderBottom: '1px solid var(--glass-border)', paddingBottom: '0.5rem', marginBottom: '1rem', fontSize: '1.2rem' }}>Order Lines</h3>
+                                <h3 style={{ borderBottom: '1px solid var(--glass-border)', paddingBottom: '0.5rem', marginBottom: '1rem', fontSize: '1.2rem' }}>Lignes de commande</h3>
                                 
                                 {order.order_lines.map((line, idx) => (
                                     <div key={idx} style={{ 
@@ -255,21 +260,21 @@ export default function OrderDetails() {
                                         padding: '1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)'
                                     }}>
                                         <div>
-                                            <label style={{display: 'block', fontSize: '0.8rem', marginBottom: '4px', color: 'var(--text-secondary)'}}>Product</label>
+                                            <label style={{display: 'block', fontSize: '0.8rem', marginBottom: '4px', color: 'var(--text-secondary)'}}>Article</label>
                                             <select 
                                                 value={line.product_id || ''} 
                                                 onChange={ev => updateLine(idx, 'product_id', ev.target.value)}
                                                 style={{ width: '100%', padding: '8px', background: 'var(--input-bg)', border: '1px solid var(--glass-border)', borderRadius: '6px', color: '#fff' }}
                                                 required
                                             >
-                                                <option value="">-- Product --</option>
+                                                <option value="">-- Article --</option>
                                                 {products.map(p => (
                                                     <option key={p.id} value={p.id}>{p.name}</option>
                                                 ))}
                                             </select>
                                         </div>
                                         <div>
-                                            <label style={{display: 'block', fontSize: '0.8rem', marginBottom: '4px', color: 'var(--text-secondary)'}}>Quantity</label>
+                                            <label style={{display: 'block', fontSize: '0.8rem', marginBottom: '4px', color: 'var(--text-secondary)'}}>Quantité</label>
                                             <input 
                                                 type="number" min="1" step="0.1" 
                                                 value={line.quantity} 
@@ -279,7 +284,7 @@ export default function OrderDetails() {
                                             />
                                         </div>
                                         <div>
-                                            <label style={{display: 'block', fontSize: '0.8rem', marginBottom: '4px', color: 'var(--text-secondary)'}}>Unit Price</label>
+                                            <label style={{display: 'block', fontSize: '0.8rem', marginBottom: '4px', color: 'var(--text-secondary)'}}>Prix unitaire</label>
                                             <input 
                                                 type="number" min="0" step="0.01" 
                                                 value={line.price_unit} 
@@ -299,14 +304,14 @@ export default function OrderDetails() {
                                     onClick={addLine}
                                     style={{ background: 'rgba(99, 102, 241, 0.2)', border: '1px dashed #6366f1', color: '#818cf8', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontSize: '0.9rem', width: '100%', fontWeight: '500' }}
                                 >
-                                    + Add Line Item
+                                    + Ajouter une ligne
                                 </button>
                             </div>
                         )}
 
                         <div style={{ display: 'flex', gap: '1rem', marginTop: '2.5rem' }}>
                             <button className="btn-primary" disabled={saving} type="submit" style={{ marginTop: 0 }}>
-                                {saving ? 'Processing...' : (isNew ? 'Create Order' : 'Save Changes')}
+                                {saving ? 'Traitement...' : (isNew ? 'Créer le devis' : 'Enregistrer')}
                             </button>
                             <button 
                                 className="btn-primary" 
@@ -314,7 +319,7 @@ export default function OrderDetails() {
                                 onClick={() => navigate('/orders')} 
                                 style={{ marginTop: 0, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
                             >
-                                Go Back
+                                Retour
                             </button>
                         </div>
                     </form>

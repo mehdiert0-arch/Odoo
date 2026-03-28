@@ -31,7 +31,7 @@ export default function Clients() {
         setLoading(true);
         const creds = getCredentials();
         if (!creds) {
-            setError("Credentials not found. Please login again.");
+            setError("Identifiants introuvables. Veuillez vous reconnecter.");
             setLoading(false);
             return;
         }
@@ -42,7 +42,7 @@ export default function Clients() {
             })
             .catch(err => {
                 console.error(err);
-                setError(err.response?.data?.message || 'Failed to fetch clients from Odoo');
+                setError(err.response?.data?.message || 'Échec du chargement des clients depuis Odoo');
             })
             .finally(() => {
                 setLoading(false);
@@ -53,7 +53,7 @@ export default function Clients() {
         <div>
             <div className="page-header">
                 <h1 className="page-title">Clients (Odoo)</h1>
-                <Link to="/clients/new" className="btn-primary" style={{ width: 'auto', margin: 0 }}>Add new</Link>
+                <Link to="/clients/new" className="btn-primary" style={{ width: 'auto', margin: 0 }}>Ajouter un client</Link>
             </div>
 
             {error && (
@@ -68,15 +68,15 @@ export default function Clients() {
                         <div className="loader"></div>
                     </div>
                 ) : clients.length === 0 ? (
-                    <div className="empty-state">No clients found.</div>
+                    <div className="empty-state">Aucun client trouvé.</div>
                 ) : (
                     <table className="data-table">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Location</th>
+                                <th>Nom</th>
+                                <th>E-mail</th>
+                                <th>Téléphone</th>
+                                <th>Localisation</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -88,7 +88,7 @@ export default function Clients() {
                                     <td>{c.phone || '-'}</td>
                                     <td>{c.city ? `${c.city}, ${c.street || ''}` : (c.street || '-')}</td>
                                     <td>
-                                        <div style={{ color: '#c084fc', fontSize: '0.85rem', fontWeight: 'bold' }}>EDIT</div>
+                                        <div style={{ color: '#c084fc', fontSize: '0.85rem', fontWeight: 'bold' }}>MODIFIER</div>
                                     </td>
                                 </tr>
                             ))}

@@ -43,8 +43,8 @@ export default function Login() {
 
     return (
         <form onSubmit={onSubmit}>
-            <h1 className="auth-title">Welcome back</h1>
-            <p className="auth-subtitle">Welcome back! Please enter your details.</p>
+            <h1 className="auth-title">Bon retour</h1>
+            <p className="auth-subtitle">Content de vous revoir ! Veuillez entrer vos informations.</p>
             
             {errors && (
                 <div className="error-message">
@@ -53,17 +53,17 @@ export default function Login() {
             )}
 
             <div className="form-group">
-                <label>Email Address</label>
-                <input ref={emailRef} type="email" placeholder="Enter your email" required />
+                <label>Adresse e-mail</label>
+                <input ref={emailRef} type="email" placeholder="Entrez votre e-mail" required />
             </div>
 
             <div className="form-group">
-                <label>Password</label>
+                <label>Mot de passe</label>
                 <input ref={passwordRef} type="password" placeholder="••••••••" required />
             </div>
 
             <button className="btn-primary" disabled={loading} type="submit" style={{ marginTop: '2rem' }}>
-                {loading ? 'Authenticating...' : 'Sign in to Portal'}
+                {loading ? 'Authentification en cours...' : 'Se connecter au Portail'}
             </button>
         </form>
     );

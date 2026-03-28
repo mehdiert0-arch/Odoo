@@ -19,67 +19,62 @@ export default function Dashboard() {
         newClients: 8,
         totalProducts: 142
     });
-    const [loading, setLoading] = useState(false);
 
-    // Mock chart data using CSS heights
     const salesProgress = [65, 82, 45, 90, 70, 75, 95];
 
     return (
         <div className="dashboard-wrapper" style={{ animation: 'slideUp 0.6s ease-out' }}>
             <div className="page-header" style={{ marginBottom: '3rem' }}>
                 <div>
-                    <h1 className="page-title">Operational Overview</h1>
-                    <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>Real-time business performance from Odoo ERP.</p>
+                    <h1 className="page-title">Vue d'ensemble opérationnelle</h1>
+                    <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>Performance commerciale en temps réel depuis Odoo ERP.</p>
                 </div>
                 <div style={{ background: 'var(--input-bg)', padding: '10px 20px', borderRadius: '12px', border: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <Clock size={16} color="var(--primary-color)" />
-                    <span style={{ fontSize: '0.9rem', fontWeight: '500' }}>Last synced: Just now</span>
+                    <span style={{ fontSize: '0.9rem', fontWeight: '500' }}>Dernière synchro : À l'instant</span>
                 </div>
             </div>
 
-            {/* Top Stat Grid */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '2rem', marginBottom: '3rem' }}>
                 <StatCard 
-                    title="Revenue" 
-                    value={`$${stats.totalSales}`} 
-                    subtitle="+12.5% from last month" 
+                    title="Chiffre d'affaires" 
+                    value={`${stats.totalSales} €`} 
+                    subtitle="+12.5% depuis le mois dernier" 
                     icon={<DollarSign size={24} />} 
                     color="#6366f1"
                     trend="up"
                 />
                 <StatCard 
-                    title="Open Orders" 
+                    title="Commandes" 
                     value={stats.activeOrders} 
-                    subtitle="Currently in quotation" 
+                    subtitle="Actuellement en devis" 
                     icon={<ShoppingCart size={24} />} 
                     color="#ec4899"
                     trend="up"
                 />
                 <StatCard 
-                    title="Partners" 
+                    title="Partenaires" 
                     value={stats.newClients} 
-                    subtitle="Acquired this week" 
+                    subtitle="Acquis cette semaine" 
                     icon={<Users size={24} />} 
                     color="#10b981"
                     trend="neutral"
                 />
                 <StatCard 
-                    title="Inventory" 
+                    title="Inventaire" 
                     value={stats.totalProducts} 
-                    subtitle="SKUs in catalog" 
+                    subtitle="Articles en catalogue" 
                     icon={<Package size={24} />} 
                     color="#f59e0b"
                     trend="down"
                 />
             </div>
 
-            {/* Main Content Sections */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '2rem' }}>
                 
-                {/* Sales Activity Card */}
                 <div className="auth-card" style={{ maxWidth: 'none', padding: '2.5rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem' }}>
-                        <h3 style={{ margin: 0, fontSize: '1.25rem' }}>Weekly Sales Velocity</h3>
+                        <h3 style={{ margin: 0, fontSize: '1.25rem' }}>Vitesse de vente hebdomadaire</h3>
                         <TrendingUp size={20} color="var(--text-secondary)" />
                     </div>
                     <div style={{ display: 'flex', alignItems: 'flex-end', gap: '15px', height: '180px', paddingBottom: '1rem', borderBottom: '1px solid var(--glass-border)' }}>
@@ -92,38 +87,36 @@ export default function Dashboard() {
                                     borderRadius: '8px 8px 4px 4px',
                                     transition: 'height 1s ease'
                                 }}></div>
-                                <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>D{i+1}</span>
+                                <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>J{i+1}</span>
                             </div>
                         ))}
                     </div>
                 </div>
 
-                {/* Workflow Status Card */}
                 <div className="auth-card" style={{ maxWidth: 'none', padding: '2.5rem' }}>
-                    <h3 style={{ margin: '0 0 2rem 0', fontSize: '1.25rem' }}>Order Lifecycle</h3>
+                    <h3 style={{ margin: '0 0 2rem 0', fontSize: '1.25rem' }}>Cycle de vie des commandes</h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                        <ProgressBar label="Quotation" percent={70} color="#6366f1" />
-                        <ProgressBar label="Confirmed Orders" percent={45} color="#10b981" />
-                        <ProgressBar label="Invoiced" percent={28} color="#ec4899" />
-                        <ProgressBar label="Cancelled" percent={5} color="#f43f5e" />
+                        <ProgressBar label="Devis" percent={70} color="#6366f1" />
+                        <ProgressBar label="Commandes confirmées" percent={45} color="#10b981" />
+                        <ProgressBar label="Facturées" percent={28} color="#ec4899" />
+                        <ProgressBar label="Annulées" percent={5} color="#f43f5e" />
                     </div>
                 </div>
 
             </div>
 
-            {/* Bottom Section: Recent Log */}
             <div className="auth-card" style={{ maxWidth: 'none', padding: '2rem', marginTop: '2rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                    <h3 style={{ margin: 0 }}>Processing Orders</h3>
-                    <button style={{ background: 'transparent', border: 'none', color: 'var(--primary-color)', fontWeight: '600', cursor: 'pointer' }}>View Report</button>
+                    <h3 style={{ margin: 0 }}>Commandes en cours</h3>
+                    <button style={{ background: 'transparent', border: 'none', color: 'var(--primary-color)', fontWeight: '600', cursor: 'pointer' }}>Voir le rapport</button>
                 </div>
                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                     <thead>
                         <tr style={{ color: 'var(--text-secondary)', borderBottom: '1px solid var(--glass-border)' }}>
-                            <th style={{ padding: '12px 6px', fontWeight: '500', fontSize: '0.85rem' }}>ID</th>
-                            <th style={{ padding: '12px 6px', fontWeight: '500', fontSize: '0.85rem' }}>PARTNER</th>
-                            <th style={{ padding: '12px 6px', fontWeight: '500', fontSize: '0.85rem' }}>STATE</th>
-                            <th style={{ padding: '12px 6px', fontWeight: '500', fontSize: '1.2rem', textAlign: 'right' }}>VAL</th>
+                            <th style={{ padding: '12px 6px', fontWeight: '500', fontSize: '0.85rem' }}>REF</th>
+                            <th style={{ padding: '12px 6px', fontWeight: '500', fontSize: '0.85rem' }}>PARTENAIRE</th>
+                            <th style={{ padding: '12px 6px', fontWeight: '500', fontSize: '0.85rem' }}>ÉTAT</th>
+                            <th style={{ padding: '12px 6px', fontWeight: '500', fontSize: '1.2rem', textAlign: 'right' }}>VALEUR</th>
                         </tr>
                     </thead>
                     <tbody style={{ fontSize: '0.9rem' }}>
@@ -186,10 +179,10 @@ function RecentRow({ id, name, status, val }) {
                     color: isSale ? '#10b981' : 'var(--text-secondary)',
                     fontSize: '0.7rem', padding: '4px 8px', borderRadius: '6px', fontWeight: '700'
                 }}>
-                    {status.toUpperCase()}
+                    {status === 'sale' ? 'VENTE' : status === 'sent' ? 'DEVIS ENVOYÉ' : 'BROUILLON'}
                 </span>
             </td>
-            <td style={{ padding: '15px 6px', textAlign: 'right', fontWeight: '600' }}>${val}</td>
+            <td style={{ padding: '15px 6px', textAlign: 'right', fontWeight: '600' }}>{val} €</td>
         </tr>
     );
 }
