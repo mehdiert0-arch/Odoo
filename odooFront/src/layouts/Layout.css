@@ -141,18 +141,18 @@ body {
 }
 
 .auth-card {
-  padding: 4.5rem;
+  padding: 3rem;
   width: 100%;
-  max-width: 520px;
+  max-width: 480px;
   margin: auto;
 }
 
 #auth-layout .form-group {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 #auth-layout .auth-subtitle {
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
 /* Typography */
