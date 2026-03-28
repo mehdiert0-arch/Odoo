@@ -7,6 +7,8 @@ import Clients from "../pages/Clients";
 import ClientDetails from "../pages/ClientDetails";
 import Products from "../pages/Products";
 import ProductDetails from "../pages/ProductDetails";
+import Orders from "../pages/Orders";
+import OrderDetails from "../pages/OrderDetails";
 
 const router = createBrowserRouter([
     {
@@ -36,6 +38,14 @@ const router = createBrowserRouter([
             {
                 path: '/products/:id',
                 element: <ProductDetails />
+            },
+            {
+                path: '/orders',
+                element: <Orders />
+            },
+            {
+                path: '/orders/:id',
+                element: <OrderDetails />
             }
         ]
     },

@@ -23,6 +23,7 @@ export default function DefaultLayout() {
                     <Link to="/dashboard">Dashboard</Link>
                     <Link to="/clients">Clients (Odoo)</Link>
                     <Link to="/products">Products (Odoo)</Link>
+                    <Link to="/orders">Orders (Odoo)</Link>
                 </nav>
             </aside>
             <div className="main-content">
