@@ -62,12 +62,9 @@ export default function Login() {
                 <input ref={passwordRef} type="password" placeholder="••••••••" required />
             </div>
 
-            <button className="btn-primary" disabled={loading} type="submit">
-                {loading ? 'Signing in...' : 'Sign in'}
+            <button className="btn-primary" disabled={loading} type="submit" style={{ marginTop: '2rem' }}>
+                {loading ? 'Authenticating...' : 'Sign in to Portal'}
             </button>
-            <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.875rem', color: '#94a3b8' }}>
-                Don't have an account? <Link to="/signup" style={{ color: '#818cf8', textDecoration: 'none', fontWeight: '500' }}>Create account</Link>
-            </div>
         </form>
     );
 }
