@@ -19,11 +19,12 @@ export default function DefaultLayout() {
     return (
         <div id="default-layout" className="layout-container">
             <aside className="sidebar">
+                <div className="logo">Odoo Portal</div>
                 <nav>
                     <NavLink to="/dashboard">Dashboard</NavLink>
-                    <NavLink to="/clients">Clients (Odoo)</NavLink>
-                    <NavLink to="/products">Products (Odoo)</NavLink>
-                    <NavLink to="/orders">Orders (Odoo)</NavLink>
+                    <NavLink to="/clients">Clients</NavLink>
+                    <NavLink to="/products">Products</NavLink>
+                    <NavLink to="/orders">Orders</NavLink>
                 </nav>
             </aside>
             <div className="main-content">

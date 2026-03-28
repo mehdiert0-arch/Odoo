@@ -63,6 +63,17 @@ body {
   height: 100vh;
 }
 
+.logo {
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, #818cf8, #c084fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding: 0 1rem;
+}
+
 .sidebar nav {
   margin-top: 2rem;
 }
@@ -153,6 +164,19 @@ h1, h2, h3 {
   animation: gradientBg 5s ease infinite;
 }
 
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  gap: 2rem;
+}
+
+.page-header .btn-primary {
+  margin-left: auto;
+  min-width: fit-content;
+}
+
 /* Improved Tables */
 .data-table-container {
   overflow: hidden;
@@ -198,6 +222,16 @@ h1, h2, h3 {
   color: var(--text-secondary);
   font-weight: 600;
   margin-left: 4px;
+}
+
+.error-message {
+  color: var(--error-color);
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 2.5rem;
+  font-size: 0.9rem;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(244, 63, 94, 0.1);
 }
 
 .form-group input, .form-group select, .form-group textarea {
