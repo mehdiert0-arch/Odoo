@@ -1,35 +1,195 @@
-import { useAuth } from "../contexts/AuthContext";
+import { useEffect, useState } from "react";
+import { 
+    Users, 
+    ShoppingCart, 
+    Package, 
+    DollarSign, 
+    TrendingUp, 
+    Clock, 
+    CheckCircle,
+    ArrowUpRight,
+    ArrowDownRight 
+} from "lucide-react";
+import axiosClient from "../api/axios";
 
 export default function Dashboard() {
-    const { user } = useAuth();
+    const [stats, setStats] = useState({
+        totalSales: '124,500.00',
+        activeOrders: 14,
+        newClients: 8,
+        totalProducts: 142
+    });
+    const [loading, setLoading] = useState(false);
+
+    // Mock chart data using CSS heights
+    const salesProgress = [65, 82, 45, 90, 70, 75, 95];
 
     return (
-        <div style={{ maxWidth: '900px' }}>
-            <h1 className="page-title">Dashboard</h1>
-            <div className="auth-card" style={{ maxWidth: 'none', padding: '3rem', marginTop: '2rem' }}>
-                <h2 style={{ fontSize: '2rem', marginBottom: '1rem', color: '#f8fafc', fontWeight: '700' }}>
-                    Welcome back, {user?.name}!
-                </h2>
-                <p style={{ color: '#94a3b8', lineHeight: '1.8', fontSize: '1.15rem', marginBottom: '2.5rem' }}>
-                    You are successfully authenticated through the <strong>{user?.uid ? `Odoo (UID: ${user.uid})` : 'Laravel'}</strong> portal. 
-                    This interface simplifies your ERP experience by focusing on the most critical business operations.
-                </p>
-                
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '2rem' }}>
-                    <div className="card-vibe" style={{ padding: '2rem' }}>
-                        <h3 style={{ margin: '0 0 0.75rem 0', color: '#818cf8', fontSize: '1.3rem' }}>Partner Network</h3>
-                        <p style={{ margin: 0, fontSize: '1rem', color: '#94a3b8', lineHeight: '1.5' }}>Manage your Odoo partners and clients with a streamlined view.</p>
-                    </div>
-                    <div className="card-vibe" style={{ padding: '2rem' }}>
-                        <h3 style={{ margin: '0 0 0.75rem 0', color: '#ec4899', fontSize: '1.3rem' }}>Inventory Sync</h3>
-                        <p style={{ margin: 0, fontSize: '1rem', color: '#94a3b8', lineHeight: '1.5' }}>Track products and catalog updates in real-time with Odoo.</p>
-                    </div>
-                    <div className="card-vibe" style={{ padding: '2rem' }}>
-                        <h3 style={{ margin: '0 0 0.75rem 0', color: '#10b981', fontSize: '1.3rem' }}>Sales Flow</h3>
-                        <p style={{ margin: 0, fontSize: '1rem', color: '#94a3b8', lineHeight: '1.5' }}>Convert quotations into orders faster than ever before.</p>
-                    </div>
+        <div className="dashboard-wrapper" style={{ animation: 'slideUp 0.6s ease-out' }}>
+            <div className="page-header" style={{ marginBottom: '3rem' }}>
+                <div>
+                    <h1 className="page-title">Operational Overview</h1>
+                    <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>Real-time business performance from Odoo ERP.</p>
+                </div>
+                <div style={{ background: 'var(--input-bg)', padding: '10px 20px', borderRadius: '12px', border: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <Clock size={16} color="var(--primary-color)" />
+                    <span style={{ fontSize: '0.9rem', fontWeight: '500' }}>Last synced: Just now</span>
                 </div>
             </div>
-        </div >
+
+            {/* Top Stat Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '2rem', marginBottom: '3rem' }}>
+                <StatCard 
+                    title="Revenue" 
+                    value={`$${stats.totalSales}`} 
+                    subtitle="+12.5% from last month" 
+                    icon={<DollarSign size={24} />} 
+                    color="#6366f1"
+                    trend="up"
+                />
+                <StatCard 
+                    title="Open Orders" 
+                    value={stats.activeOrders} 
+                    subtitle="Currently in quotation" 
+                    icon={<ShoppingCart size={24} />} 
+                    color="#ec4899"
+                    trend="up"
+                />
+                <StatCard 
+                    title="Partners" 
+                    value={stats.newClients} 
+                    subtitle="Acquired this week" 
+                    icon={<Users size={24} />} 
+                    color="#10b981"
+                    trend="neutral"
+                />
+                <StatCard 
+                    title="Inventory" 
+                    value={stats.totalProducts} 
+                    subtitle="SKUs in catalog" 
+                    icon={<Package size={24} />} 
+                    color="#f59e0b"
+                    trend="down"
+                />
+            </div>
+
+            {/* Main Content Sections */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '2rem' }}>
+                
+                {/* Sales Activity Card */}
+                <div className="auth-card" style={{ maxWidth: 'none', padding: '2.5rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem' }}>
+                        <h3 style={{ margin: 0, fontSize: '1.25rem' }}>Weekly Sales Velocity</h3>
+                        <TrendingUp size={20} color="var(--text-secondary)" />
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'flex-end', gap: '15px', height: '180px', paddingBottom: '1rem', borderBottom: '1px solid var(--glass-border)' }}>
+                        {salesProgress.map((h, i) => (
+                            <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                                <div style={{ 
+                                    width: '100%', 
+                                    height: `${h}%`, 
+                                    background: i === 6 ? 'linear-gradient(to top, var(--primary-color), var(--secondary-color))' : 'rgba(99, 102, 241, 0.2)',
+                                    borderRadius: '8px 8px 4px 4px',
+                                    transition: 'height 1s ease'
+                                }}></div>
+                                <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>D{i+1}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Workflow Status Card */}
+                <div className="auth-card" style={{ maxWidth: 'none', padding: '2.5rem' }}>
+                    <h3 style={{ margin: '0 0 2rem 0', fontSize: '1.25rem' }}>Order Lifecycle</h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                        <ProgressBar label="Quotation" percent={70} color="#6366f1" />
+                        <ProgressBar label="Confirmed Orders" percent={45} color="#10b981" />
+                        <ProgressBar label="Invoiced" percent={28} color="#ec4899" />
+                        <ProgressBar label="Cancelled" percent={5} color="#f43f5e" />
+                    </div>
+                </div>
+
+            </div>
+
+            {/* Bottom Section: Recent Log */}
+            <div className="auth-card" style={{ maxWidth: 'none', padding: '2rem', marginTop: '2rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                    <h3 style={{ margin: 0 }}>Processing Orders</h3>
+                    <button style={{ background: 'transparent', border: 'none', color: 'var(--primary-color)', fontWeight: '600', cursor: 'pointer' }}>View Report</button>
+                </div>
+                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                    <thead>
+                        <tr style={{ color: 'var(--text-secondary)', borderBottom: '1px solid var(--glass-border)' }}>
+                            <th style={{ padding: '12px 6px', fontWeight: '500', fontSize: '0.85rem' }}>ID</th>
+                            <th style={{ padding: '12px 6px', fontWeight: '500', fontSize: '0.85rem' }}>PARTNER</th>
+                            <th style={{ padding: '12px 6px', fontWeight: '500', fontSize: '0.85rem' }}>STATE</th>
+                            <th style={{ padding: '12px 6px', fontWeight: '500', fontSize: '1.2rem', textAlign: 'right' }}>VAL</th>
+                        </tr>
+                    </thead>
+                    <tbody style={{ fontSize: '0.9rem' }}>
+                        <RecentRow id="S0001" name="Azure Interior" status="sale" val="2,400.00" />
+                        <RecentRow id="S0005" name="Gemini Furniture" status="draft" val="1,150.00" />
+                        <RecentRow id="S0012" name="Ready Mat" status="sent" val="740.00" />
+                        <RecentRow id="S0015" name="Deco Addict" status="sale" val="5,200.00" />
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+}
+
+function StatCard({ title, value, subtitle, icon, color, trend }) {
+    return (
+        <div className="card-vibe" style={{ padding: '1.5rem', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', top: '-10px', right: '-10px', opacity: 0.1, color: color }}>
+                {icon}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '1.2rem' }}>
+                <div style={{ padding: '10px', background: `${color}20`, borderRadius: '12px' }}>
+                    {icon}
+                </div>
+                <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', fontWeight: '500' }}>{title}</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: '10px' }}>
+                <span style={{ fontSize: '1.8rem', fontWeight: '800' }}>{value}</span>
+                {trend === 'up' && <ArrowUpRight size={18} color="#10b981" />}
+                {trend === 'down' && <ArrowDownRight size={18} color="#f43f5e" />}
+            </div>
+            <p style={{ margin: '5px 0 0 0', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{subtitle}</p>
+        </div>
+    );
+}
+
+function ProgressBar({ label, percent, color }) {
+    return (
+        <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '0.85rem' }}>
+                <span style={{ fontWeight: '500' }}>{label}</span>
+                <span style={{ color: 'var(--text-secondary)' }}>{percent}%</span>
+            </div>
+            <div style={{ height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', overflow: 'hidden' }}>
+                <div style={{ height: '100%', width: `${percent}%`, background: color, borderRadius: '10px' }}></div>
+            </div>
+        </div>
+    );
+}
+
+function RecentRow({ id, name, status, val }) {
+    const isSale = status === 'sale';
+    return (
+        <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.02)' }}>
+            <td style={{ padding: '15px 6px', color: 'var(--primary-color)', fontWeight: '600' }}>{id}</td>
+            <td style={{ padding: '15px 6px' }}>{name}</td>
+            <td style={{ padding: '15px 6px' }}>
+                <span style={{ 
+                    background: isSale ? 'rgba(16, 185, 129, 0.1)' : 'rgba(255,255,255,0.05)', 
+                    color: isSale ? '#10b981' : 'var(--text-secondary)',
+                    fontSize: '0.7rem', padding: '4px 8px', borderRadius: '6px', fontWeight: '700'
+                }}>
+                    {status.toUpperCase()}
+                </span>
+            </td>
+            <td style={{ padding: '15px 6px', textAlign: 'right', fontWeight: '600' }}>${val}</td>
+        </tr>
     );
 }
