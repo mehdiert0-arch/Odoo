@@ -185,6 +185,7 @@ h1, h2, h3 {
 
 .data-table tbody tr {
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .data-table tbody tr:hover {

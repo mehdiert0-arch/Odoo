@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axiosClient from "../api/axios";
 
 export default function Products() {
+    const navigate = useNavigate();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -90,7 +91,7 @@ export default function Products() {
                         </thead>
                         <tbody>
                             {products.map(p => (
-                                <tr key={p.id}>
+                                <tr key={p.id} onClick={() => navigate(`/products/${p.id}`)}>
                                     <td style={{ fontWeight: '500' }}>{p.name}</td>
                                     <td>
                                         <span style={{ 
@@ -106,7 +107,7 @@ export default function Products() {
                                     <td>{formatCategory(p.categ_id)}</td>
                                     <td>{p.list_price ? `$${parseFloat(p.list_price).toFixed(2)}` : '-'}</td>
                                     <td>
-                                        <Link style={{ color: '#c084fc' }} to={`/products/${p.id}`}>View Details</Link>
+                                        <div style={{ color: '#c084fc', fontSize: '0.85rem', fontWeight: 'bold' }}>EDIT</div>
                                     </td>
                                 </tr>
                             ))}

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axiosClient from "../api/axios";
 
 export default function Clients() {
+    const navigate = useNavigate();
     const [clients, setClients] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -81,13 +82,13 @@ export default function Clients() {
                         </thead>
                         <tbody>
                             {clients.map(c => (
-                                <tr key={c.id}>
+                                <tr key={c.id} onClick={() => navigate(`/clients/${c.id}`)}>
                                     <td>{c.name}</td>
                                     <td>{c.email || '-'}</td>
                                     <td>{c.phone || '-'}</td>
                                     <td>{c.city ? `${c.city}, ${c.street || ''}` : (c.street || '-')}</td>
                                     <td>
-                                        <Link style={{ marginRight: '1rem', color: '#c084fc' }} to={`/clients/${c.id}`}>View Details</Link>
+                                        <div style={{ color: '#c084fc', fontSize: '0.85rem', fontWeight: 'bold' }}>EDIT</div>
                                     </td>
                                 </tr>
                             ))}

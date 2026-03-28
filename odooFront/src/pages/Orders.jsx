@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axiosClient from "../api/axios";
 
 export default function Orders() {
+    const navigate = useNavigate();
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -126,14 +127,14 @@ export default function Orders() {
                         </thead>
                         <tbody>
                             {orders.map(o => (
-                                <tr key={o.id}>
+                                <tr key={o.id} onClick={() => navigate(`/orders/${o.id}`)}>
                                     <td style={{ fontWeight: '500' }}>{o.name}</td>
                                     <td>{formatName(o.partner_id)}</td>
                                     <td>{o.date_order ? new Date(o.date_order).toLocaleString() : '-'}</td>
                                     <td style={{ fontWeight: '600' }}>{o.amount_total ? `$${parseFloat(o.amount_total).toFixed(2)}` : '-'}</td>
                                     <td>{formatState(o.state)}</td>
                                     <td>
-                                        <Link style={{ color: '#c084fc' }} to={`/orders/${o.id}`}>View Details</Link>
+                                        <div style={{ color: '#c084fc', fontSize: '0.85rem', fontWeight: 'bold' }}>VIEW</div>
                                     </td>
                                 </tr>
                             ))}
